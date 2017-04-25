@@ -163,13 +163,6 @@ export default class extends Component {
   autoplayTimer = null
   loopJumpTimer = null
 
-  componentWillReceiveProps (nextProps) {
-    const sizeChanged = (nextProps.width || width) !== this.state.width ||
-                        (nextProps.height || height) !== this.state.height
-    if (!nextProps.autoplay && this.autoplayTimer) clearTimeout(this.autoplayTimer)
-    this.setState(this.initState(nextProps, sizeChanged))
-  }
-
   componentDidMount () {
     this.autoplay()
   }
@@ -385,7 +378,7 @@ export default class extends Component {
    */
 
   scrollBy = (index, animated = true) => {
-    if (this.internals.isScrolling || this.state.total < 2) return
+    console.log('here')
     const state = this.state
     const diff = (this.props.loop ? 1 : 0) + index + this.state.index
     let x = 0
@@ -414,6 +407,29 @@ export default class extends Component {
           }
         })
       })
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const sizeChanged = (nextProps.width || width) !== this.state.width ||
+                        (nextProps.height || height) !== this.state.height
+    if (!nextProps.autoplay && this.autoplayTimer) clearTimeout(this.autoplayTimer)
+    this.setState(this.initState(nextProps, sizeChanged))
+
+    if (this.props.overWriteIndex && (this.state.index !== nextProps.index)) {
+
+      const state = this.state
+      const diff = nextProps.index
+
+      let y = 0
+
+      if (state.dir === 'y') y = diff * state.height
+
+      if (Platform.OS === 'android') {
+        this.refs.scrollView && this.refs.scrollView[animated ? 'setPage' : 'setPageWithoutAnimation'](diff)
+      } else {
+        this.refs.scrollView && this.refs.scrollView.scrollTo({ y })
+      }
     }
   }
 
