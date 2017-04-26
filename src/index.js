@@ -428,8 +428,12 @@ export default class extends Component {
       if (Platform.OS === 'android') {
         this.refs.scrollView && this.refs.scrollView[animated ? 'setPage' : 'setPageWithoutAnimation'](diff)
       } else {
-        this.refs.scrollView && this.refs.scrollView.scrollTo({ y })
+        this.refs.scrollView && this.refs.scrollView.scrollTo({ y, animated: false })
       }
+
+      this.updateIndex({ y }, 'y', () => {
+        this.props.onMomentumScrollEnd && this.props.onMomentumScrollEnd({}, this.fullState(), this)
+      })
     }
   }
 
