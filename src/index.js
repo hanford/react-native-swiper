@@ -654,6 +654,7 @@ export default class extends Component {
           ? this.props.renderPagination(state.index, state.total, this)
           : this.renderPagination())}
         {this.renderTitle()}
+        {this.props.renderAbsoluteElement && this.props.renderAbsoluteElement}
         {this.props.showsButtons && this.renderButtons()}
       </View>
     )
